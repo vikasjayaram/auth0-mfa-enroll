@@ -1,0 +1,22 @@
+{
+  "name": "auth0-mfa-enroll",
+  "version": "1.0.0",
+  "description": "Companion app to enroll users to sms and/or otp using auth0 redirect rules",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "auth0",
+    "multifactor",
+    "mfa"
+  ],
+  "author": "vikasjayaram",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "https-localhost": "^4.6.4",
+    "qrcode": "^1.4.4"
+  }
+}
