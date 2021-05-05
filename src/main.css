@@ -1,0 +1,16 @@
+.hidden {
+  display: none;
+}
+  
+label {
+  margin-bottom: 10px;
+  display: block;
+  border: black;
+  border-width: 1px;
+  border-style: solid;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-all;
+}

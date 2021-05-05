@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>SPA SDK Sample</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/monokai-sublime.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/solid.css"
+        integrity="sha384-r/k8YTFqmlOaqRkZuSiE9trsrDXkh07mRaoGBMoDcmA58OHILZPsk29i2BsFng1B" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/fontawesome.css"
+        integrity="sha384-4aon80D8rXCGx9ayDt85LbyUHeMWd3UiBaWliBlJ53yzm9hqN21A+o1pqoyK04h+" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdn.auth0.com/js/auth0-samples-theme/1.0/css/auth0-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+    <script src="/main.js"></script>
+    <script src="/node_modules/qrcode/build/qrcode.min.js"></script>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</head>
+
+<body class="h-100">
+    <div id="app" class="h-100 d-flex flex-column">
+        <div class="nav-container">
+            <nav class="navbar navbar-expand-md navbar-light bg-light">
+                <div class="container">
+                    <div class="navbar-brand logo"></div>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a href="/" class="nav-link route-link">Multifactor Enrollment Application</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav d-none d-md-block">
+                            <!-- Login button: show if NOT authenticated -->
+                            <li class="nav-item">
+                                <button id="qsLoginBtn" onclick="login()" class="btn btn-primary btn-margin">
+                                    Log in
+                                </button>
+                            </li>
+                            <!-- / Login button -->
+
+                            <!-- Fullsize dropdown: show if authenticated -->
+                            <li class="nav-item dropdown">
+                                <button class="btn btn-primary btn-block " id="qsLogoutBtn" onclick="logout()">
+                                    Logout
+                                </button>
+                            </li>
+                            <!-- /Fullsize dropdown -->
+                        </ul>
+                        <!-- /Responsive login button -->
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="container hidden" id="gated-content">
+            <hr/>
+            <p>
+                You're seeing this content because you're currently
+                <strong>logged in</strong>.
+            </p>
+            <hr/>
+            <button type="button" class="btn btn-primary btn-margin" data-toggle="modal" data-target="#associate-sms-form">
+                Add Phone Number
+            </button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#associate-otp-form">
+                Add OTP Device
+            </button>
+            <button type="button" class="btn btn-primary" onclick="execContinue()">
+                Continue Authentication
+            </button>
+            <hr/>
+            <label>
+                <b>Access token:</b>
+                <pre id="access-token"></pre>
+            </label>
+
+            <label>
+                <b>User profile:</b>
+                <pre id="user-profile"></pre>
+            </label>
+
+            <label>
+                <b>MFA devices:</b>
+                <pre id="mfa-devices"></pre>
+            </label>
+            <label>
+                <b>Manage MFA devices:</b></br></br>
+                Delete by id <input id="delete-mfa-id" placeholder="device id" size="40" /> <button
+                    onclick="deleteMfa()">delete</button> </br></br>
+
+                <!-- Add new SMS device: <input id="associate-mfa-sms-phone" placeholder="phone number" /> <button
+                    onclick="associateMfaSms()">add</button></br>
+                <span id="verify-mfa-sms-block" style="display: none;">
+                    <input id="verify-mfa-sms-code" placeholder="SMS code" /> <button
+                        onclick="verifyMfaSms()">verify</button>
+                </span></br> -->
+<!-- 
+                Add new OTP device: <button onclick="associateMfaOtp()">add</button></br>
+                <span id="verify-mfa-otp-block" style="display: none;">
+                    OTP secret <input disabled="true" id="verify-mfa-otp-secret" size="45"></input>
+                    <canvas id="verify-mfa-otp-qr"></canvas>
+                    <input id="verify-mfa-otp-code" placeholder="6-digit code" /> <button
+                        onclick="verifyMfaOtp()">verify</button>
+                </span></br> -->
+
+            </label></pre>
+        </div>
+        <!-- <div id="associate-sms-form" class="modal">
+            </br></br>
+
+            Add new SMS device: <input id="associate-mfa-sms-phone" placeholder="phone number" /> <button
+                onclick="associateMfaSms()">add</button></br>
+            <span id="verify-mfa-sms-block" style="display: none;">
+                <input id="verify-mfa-sms-code" placeholder="SMS code" /> <button
+                    onclick="verifyMfaSms()">verify</button>
+            </span></br>
+        </div> -->
+        <!-- Button trigger modal -->
+
+
+        <!-- SMS Modal -->
+        <div class="modal fade" id="associate-sms-form" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Enroll your phone number</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="associate-mfa-sms-block" class="input-group input-group-lg">
+                            <input id="associate-mfa-sms-phone" placeholder="mobile number" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm"/>
+                            <button type="button" class="btn btn-primary" onclick="associateMfaSms()">Enroll</button>
+                        </div>
+                        <div id="verify-mfa-sms-block" style="display: none;" class="input-group input-group-lg">
+                            <input id="verify-mfa-sms-code" placeholder="SMS Code" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm"/>
+                            <button type="button" class="btn btn-primary" onclick="verifyMfaSms()">Verify</button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- OTP Modal -->
+        <div class="modal fade" id="associate-otp-form" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Enroll OTP Device</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <button  class="btn btn-primary" onclick="associateMfaOtp()">Add</button><br/>
+                        <div id="verify-mfa-otp-block" style="display: none;" >
+                            <div class="input-group mb-3">
+                                <input disabled="true" id="verify-mfa-otp-secret" size="45" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="test"></input>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard()">Copy</button>
+                                  </div>
+                            </div>
+                            <canvas id="verify-mfa-otp-qr"></canvas>
+                            <div class="input-group mb-3">
+                                <input id="verify-mfa-otp-code" type="number" placeholder="6-digit code" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" /> 
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary"
+                                onclick="verifyMfaOtp()">Verify</button>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Skip</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>
