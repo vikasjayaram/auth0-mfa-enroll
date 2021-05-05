@@ -1,9 +1,11 @@
 function redirectForMFAEnrollment(user, context, callback) {
-    console.log('MFA-redirect');
     if (context.protocol === "redirect-callback") {
-        if (context.request.body.sms_mfa_enabled && context.request.body.otp_mfa_enabled) {
+        if (context.request.query.sms_mfa_enabled && context.request.query.otp_mfa_enabled) {
             user.app_metadata = user.app_metadata || {};
-            user.app_metadata.mfa = context.request.body;
+            user.app_metadata.mfa = {
+                sms_mfa_enabled: context.request.query.sms_mfa_enabled,
+                otp_mfa_enabled: context.request.query.otp_mfa_enabled
+            };
             var request = require('request@2.56.0');
             var userApiUrl = auth0.baseUrl + '/users';
             request.patch({
