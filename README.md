@@ -8,7 +8,7 @@ This project shows how an Auth0 user can list, add and delete his/her MFA device
 1. Create a new SPA [docs](https://auth0.com/docs/dashboard/guides/applications/register-app-spa)
 1. Go yo your SPA setting and add "http://localhost:8080" (don't add the slash at the back) to "Allowed Callback URLs", "Allowed Web Origins", "Allowed Logout URLs", "Allowed Origins (CORS)"
 1. Go to "Advanced Settings" of the SPA and enable "MFA" grant type
-1. Copy `config.json.example` file to `config.json` in the repo's dir and put your Auth0 domain and SPA client id in there
+1. Copy `config.json.example` file to `config.json` in the repo's dir and put your Auth0 domain (Can be custom domain or auth0 domain), auth0_domain and SPA client id in there
 1. Run `npm install`
 1. Run `npm run start` and open http://localhost:8080 in your browser
 
