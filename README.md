@@ -28,5 +28,5 @@ This project shows how an Auth0 user can list, add and delete his/her MFA device
 
 ### To Do
 
-[] Display recovery code on first device enrollment 
-[] UML Diagram
+- [ ] Display recovery code on first device enrollment 
+- [ ] UML Diagram
