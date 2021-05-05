@@ -1,0 +1,5 @@
+{
+    "domain": "<CUSTOM_DOMAIN/AUTH0_DOMAIN>",
+    "auth0_domain": "<AUTH0_DOMAIN>",
+    "client_id": "<MFA_APP_CLIENT_ID>"
+}
