@@ -25,6 +25,6 @@ This project shows how an Auth0 user can list, add and delete his/her MFA device
 * To add an OTP device just press "add" button next to "Add new OTP device" then a new block with QR code should appear. Scan the QR code or copy OTP secret to your Google Authenticator (or similar software), enter 6-digit code and press "verify".
 * Note that access token is only valid for 10 minutes. After that, you will have to login again.
 
-** To Do
+### To Do
 
 [] Display recovery code on first device enrollment 
