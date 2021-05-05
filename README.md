@@ -23,6 +23,7 @@ This project shows how an Auth0 user can list, add and delete his/her MFA device
 * To delete a device just copy it's id from the list to the input field next to "Delete by id" in "Manage MFA devices" block and press "delete".
 * To add a phone number click "Add Phone Number" (use `+1234567890` format) and press "Enroll". You should receive an SMS with a code (if your Auth0 account is configured correctly or you still have free quota), enter the code into the new input that should appear under the phone number and press "verify".
 * To add an OTP device just press "add" button next to "Add new OTP device" then a new block with QR code should appear. Scan the QR code or copy OTP secret to your Google Authenticator (or similar software), enter 6-digit code and press "verify".
+* Finally click the Continue Authentication button to resume the original login transaction and back into the http://localhost:3000 application.
 * Note that access token is only valid for 10 minutes. After that, you will have to login again.
 
 ### To Do
