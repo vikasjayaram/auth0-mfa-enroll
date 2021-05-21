@@ -21,6 +21,16 @@ function redirectForMFAEnrollment(user, context, callback) {
                     return callback(null, user, context);
                 }
             });
+            // store the app_metadata
+            auth0.users
+                .updateAppMetadata(user.user_id, user.app_metadata)
+                .then(function () {
+                    // throw error
+                    return callback(null, user, context);
+                })
+                .catch(function (err) {
+                    return callback(err);
+                });
         } else {
             return callback(new UnauthorizedError('User did not provide Email!'));
         }
@@ -32,7 +42,7 @@ function redirectForMFAEnrollment(user, context, callback) {
         // configuration.MFA_COMPANION_APP_ENDPOINT => http://localhost:8080
         context.redirect = {
             url: configuration.MFA_COMPANION_APP_ENDPOINT +
-                '?auth0_domain=' + encodeURIComponent(auth0Domain) + '&client_name=' + encodeURIComponent(context.clientName) + '&enroll_mfa=true'
+                '?auth0_domain=' + encodeURIComponent(auth0Domain) + '&client_name=' + encodeURIComponent(context.clientName) + '&enroll_mfa=true&session_token=TEST'
         };
     }
     return callback(null, user, context);
