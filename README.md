@@ -12,6 +12,13 @@ This project shows how an Auth0 user can list, add and delete his/her MFA device
 1. Run `npm install`
 1. Run `npm run start` and open http://localhost:8080 in your browser
 
+**Sequence Diagram**
+![Image of MFA Flow](https://github.com/vikasjayaram/auth0-mfa-enroll/blob/master/images/UML%20sequence_%20Auto%20Enroll%20MFA%20factor%20%232.jpeg)
+
+**Screenshot**
+![Image of MFA App](https://github.com/vikasjayaram/auth0-mfa-enroll/blob/master/images/screentshot-1.png)
+
+
 **Usage tips:**
 
 * Start another SPA / Web App say at http://localhost:3000
@@ -22,6 +29,7 @@ This project shows how an Auth0 user can list, add and delete his/her MFA device
 * After you log in your access token, user info and a list of MFA devices will be displayed.
 * To delete a device just copy it's id from the list to the input field next to "Delete by id" in "Manage MFA devices" block and press "delete".
 * To add a phone number click "Add Phone Number" (use `+1234567890` also known as [E.164](https://support.twilio.com/hc/en-us/articles/223183008-Formatting-International-Phone-Numbers) format, ) and press "Enroll". You should receive an SMS with a code (if your Auth0 account is configured correctly or you still have free quota), enter the code into the new input that should appear under the phone number and press "verify".
+* To auto enroll a phone number from the custom claim click "Auto enroll user from custom claim"
 * To add an OTP device just press "add" button next to "Add new OTP device" then a new block with QR code should appear. Scan the QR code or copy OTP secret to your Google Authenticator (or similar software), enter 6-digit code and press "verify".
 * Finally click the Continue Authentication button to resume the original login transaction and back into the http://localhost:3000 application.
 * Note that access token is only valid for 10 minutes. After that, you will have to login again.
@@ -29,4 +37,6 @@ This project shows how an Auth0 user can list, add and delete his/her MFA device
 ### To Do
 
 - [ ] Display recovery code on first device enrollment 
+- [ ] Auto enroll user using custom claim
+- [ ] Implement auth0 actions
 - [ ] UML Diagram
