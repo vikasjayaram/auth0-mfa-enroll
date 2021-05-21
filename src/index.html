@@ -80,6 +80,10 @@
                 Continue Authentication
             </button>
             <hr/>
+            <button type="button" class="btn btn-primary btn-margin" data-toggle="modal" data-target="#associate-sms-form">
+                Auto Enroll user from custom claim
+            </button>
+            <hr/>
             <label>
                 <b>Access token:</b>
                 <pre id="access-token"></pre>
@@ -99,34 +103,8 @@
                 Delete by id <input id="delete-mfa-id" placeholder="device id" size="40" /> <button
                     onclick="deleteMfa()">delete</button> </br></br>
 
-                <!-- Add new SMS device: <input id="associate-mfa-sms-phone" placeholder="phone number" /> <button
-                    onclick="associateMfaSms()">add</button></br>
-                <span id="verify-mfa-sms-block" style="display: none;">
-                    <input id="verify-mfa-sms-code" placeholder="SMS code" /> <button
-                        onclick="verifyMfaSms()">verify</button>
-                </span></br> -->
-<!-- 
-                Add new OTP device: <button onclick="associateMfaOtp()">add</button></br>
-                <span id="verify-mfa-otp-block" style="display: none;">
-                    OTP secret <input disabled="true" id="verify-mfa-otp-secret" size="45"></input>
-                    <canvas id="verify-mfa-otp-qr"></canvas>
-                    <input id="verify-mfa-otp-code" placeholder="6-digit code" /> <button
-                        onclick="verifyMfaOtp()">verify</button>
-                </span></br> -->
-
             </label></pre>
         </div>
-        <!-- <div id="associate-sms-form" class="modal">
-            </br></br>
-
-            Add new SMS device: <input id="associate-mfa-sms-phone" placeholder="phone number" /> <button
-                onclick="associateMfaSms()">add</button></br>
-            <span id="verify-mfa-sms-block" style="display: none;">
-                <input id="verify-mfa-sms-code" placeholder="SMS code" /> <button
-                    onclick="verifyMfaSms()">verify</button>
-            </span></br>
-        </div> -->
-        <!-- Button trigger modal -->
 
 
         <!-- SMS Modal -->
