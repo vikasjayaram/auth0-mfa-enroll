@@ -8,6 +8,7 @@ let token;
 let auth0_domain;
 let user;
 let continueUrl;
+let namespace = 'https://myapp.example.com/';
 window.onload = async () => {
     log("creating auth0 client");
     var res = httpRequest({
@@ -18,7 +19,6 @@ window.onload = async () => {
     clientId = res.client_id;
     auth0_domain = res.auth0_domain;
     audience = `https://${auth0_domain}/mfa/`;
-    //audience = 'https://api.billing.com';
     try {
         auth0 = await createAuth0Client({
             domain: domain,
@@ -33,9 +33,10 @@ window.onload = async () => {
     }
 
     const query = window.location.search;
-    if (query.includes("auth0_domain=") && query.includes("client_name=")) {
+    if (query.includes("session_token=") && query.includes("enroll_mfa=")) {
         const urlParams = new URLSearchParams(window.location.search);
         window.localStorage.setItem("original_state", urlParams.get('state'));
+        window.localStorage.setItem("session_token", urlParams.get('session_token'));
         continueUrl = `https://${domain}/continue?state=${urlParams.get('state')}`;
         console.log(continueUrl);
         login();
@@ -78,6 +79,10 @@ const updateUI = async () => {
         document.getElementById("user-profile").innerHTML = JSON.stringify(
           user, null, 2
         );
+        if (user[namespace + 'mobile']) {
+            document.getElementById("associate-mfa-sms-phone").value = user[namespace + 'mobile'];
+            document.getElementById("associate-mfa-sms-phone").readOnly = true;
+        }
         await refreshMfaList();
     } else {
         log("not authenticated");
@@ -292,7 +297,7 @@ const execContinue = async () => {
                 break;
         }
     }
-    window.location = `https://${domain}/continue?state=${window.localStorage.getItem('original_state')}&sms_mfa_enabled=${data.sms_mfa_enabled}&otp_mfa_enabled=${data.otp_mfa_enabled}`;
+    window.location = `https://${domain}/continue?state=${window.localStorage.getItem('original_state')}&${window.localStorage.getItem('session_token')}&sms_mfa_enabled=${data.sms_mfa_enabled}&otp_mfa_enabled=${data.otp_mfa_enabled}`;
     // httpRequest({
     //     method: "POST",
     //     url: `https://${domain}/continue?state=${window.localStorage.getItem('original_state')}&sms_mfa_enabled=${data.sms_mfa_enabled}&otp_mfa_enabled=${data.otp_mfa_enabled}`,
