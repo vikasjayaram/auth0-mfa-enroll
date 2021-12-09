@@ -128,7 +128,7 @@ const log = (text) => {
 
 const challengeFactorMFA = async (oobChannel) => {
     try {
-        await auth0.getTokenSilently({ ignoreCache: true, stepUp: 'withdraw:funds', });
+        await auth0.getTokenSilently({ ignoreCache: true, stepUp: 'withdraw:funds'});
     } catch (e) {
         if(e.error === 'mfa_required') {
             log(e.mfa_token);
