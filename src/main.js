@@ -8,6 +8,7 @@ let token;
 let auth0_domain;
 let user;
 let continueUrl;
+let mfaDevices = [];
 let namespace = 'https://myapp.example.com/';
 window.onload = async () => {
     log("creating auth0 client");
@@ -26,6 +27,8 @@ window.onload = async () => {
             audience: audience,
             scope: scope,
             redirect_uri: window.location.origin,
+            useRefreshTokens: true,
+            cacheLocation: 'localstorage'
         });
     } catch (err) {
         log("error creating auth0 client");
@@ -84,6 +87,7 @@ const updateUI = async () => {
             document.getElementById("associate-mfa-sms-phone").readOnly = true;
         }
         await refreshMfaList();
+
     } else {
         log("not authenticated");
         document.getElementById("gated-content").classList.add("hidden");
@@ -99,7 +103,8 @@ const refreshMfaList = async () => {
         }
     });
     //$('#associate-sms-form').modal();
-    window.localStorage.setItem("mfaDevices", JSON.stringify(mfa));
+    //window.localStorage.setItem("mfaDevices", JSON.stringify(mfa));
+    mfaDevices = mfa;
     document.getElementById("mfa-devices").innerHTML = JSON.stringify(mfa, null, 2);
 }
 
@@ -121,6 +126,21 @@ const log = (text) => {
     console.log(new Date(), text);
 }
 
+const challengeFactorMFA = async (oobChannel) => {
+    try {
+        await auth0.getTokenSilently({ ignoreCache: true, stepUp: 'withdraw:funds', });
+    } catch (e) {
+        if(e.error === 'mfa_required') {
+            log(e.mfa_token);
+            let obj = mfaDevices.find(o => o.oob_channel === oobChannel);
+            if (obj) {
+                challengeMFA(obj, e.mfa_token);
+            } else {
+                alert(`No ${oobChannel.toUpperCase()} factor found, Please enroll.`)
+            }
+        }
+    }
+}
 const associateMfaOtp = async () => {
     var res = httpRequest({
         method: "POST",
@@ -235,6 +255,26 @@ const deleteMfa = async () => {
     await refreshMfaList();
 }
 
+const challengeMFA = async (device, mfa_token) => {
+    var res = httpRequest({
+        method: "POST",
+        url: `https://${domain}/mfa/challenge`,
+        body: {
+            mfa_token: mfa_token,
+            challenge_type: 'oob',
+            authenticator_id: device.id, // If you want Auth0 to trigger the most secure leave this parameter out.
+            client_id: clientId,
+        }
+    });
+    if (!res.oob_code) {
+        log("failed to challenge MFA");
+        console.dir(res);
+        return;
+    }
+    document.getElementById("verify-mfa-code").dataset.oobCode = res.oob_code;
+    document.getElementById("verify-mfa-code").dataset.mfaToken = mfa_token;
+    $("#verify-otp-form").modal({show: true});
+}
 const httpRequest = ({ method, url, body, headers }) => {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open(method, url, false);
@@ -279,8 +319,6 @@ const copyToClipboard = async () => {
 }
 
 const execContinue = async () => {
-    var mfaDevices = JSON.parse(window.localStorage.getItem('mfaDevices')) || [];
-    console.log(mfaDevices);
     var data = {
         sms_mfa_enabled: false,
         otp_mfa_enabled: false
@@ -303,4 +341,30 @@ const execContinue = async () => {
     //     url: `https://${domain}/continue?state=${window.localStorage.getItem('original_state')}&sms_mfa_enabled=${data.sms_mfa_enabled}&otp_mfa_enabled=${data.otp_mfa_enabled}`,
     //     body: data
     // });
+}
+
+const verifyChallenge = async (device, oob_code, mfa_token) => {
+    var oobCode = document.getElementById("verify-mfa-code").dataset.oobCode;
+    var mfaToken = document.getElementById("verify-mfa-code").dataset.mfaToken;
+    var bindingCode = document.getElementById("verify-mfa-code").value;
+    var res = httpRequest({
+        method: "POST",
+        url: `https://${domain}/oauth/token`,
+        body: {
+            mfa_token: mfaToken,
+            oob_code: oobCode,
+            binding_code: bindingCode,
+            grant_type: 'http://auth0.com/oauth/grant-type/mfa-oob',
+            client_id: clientId,
+        }
+    });
+    if (!res.access_token) {
+        log("failed to verify sms device");
+        console.dir(res);
+        alert('Invalid Code');
+        return;
+    } else {
+        document.getElementById('json-container').innerHTML = JSON.stringify(res, null, 2);
+        $('#verify-otp-form').modal('hide');
+    }
 }
