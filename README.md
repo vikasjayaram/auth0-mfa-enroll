@@ -18,7 +18,7 @@ Provides a way to challenge for [MFA using AUth0 MFA API](https://auth0.com/docs
 ![Image of MFA Flow](https://github.com/vikasjayaram/auth0-mfa-enroll/blob/master/images/UML%20sequence_%20Auto%20Enroll%20MFA%20factor%20%232.jpeg)
 
 **Screenshot**
-![Image of MFA App](https://github.com/vikasjayaram/auth0-mfa-enroll/blob/master/images/screenshot-2.png)
+![Image of MFA App](https://github.com/vikasjayaram/auth0-mfa-enroll/blob/master/images/screenshot-1.png)
 
 
 **Usage tips:**
