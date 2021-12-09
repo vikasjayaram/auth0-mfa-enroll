@@ -2,7 +2,7 @@
 
 This project shows how an Auth0 user can list, add and delete his/her MFA devices using [MFA API](https://auth0.com/docs/multifactor-authentication/api) (which is just a part of [Authentication API](https://auth0.com/docs/api/authentication#multi-factor-authentication)) directly from a web page without any backend. Currently, it only supports adding SMS and OTP.
 
-Provides a way to challenge for [MFA using AUth0 MFA API](https://auth0.com/docs/api/authentication#multi-factor-authentication)
+Provides a way to challenge for [MFA using Auth0 MFA API](https://auth0.com/docs/api/authentication#multi-factor-authentication)
 
 **Configuration steps:**
 
@@ -40,6 +40,6 @@ Provides a way to challenge for [MFA using AUth0 MFA API](https://auth0.com/docs
 
 - [ ] Display recovery code on first device enrollment 
 - [X] Auto enroll user using custom claim
-- [X] Challenge For [MFA using AUth0 MFA API](https://auth0.com/docs/api/authentication#multi-factor-authentication)
+- [X] Challenge For [MFA using Auth0 MFA API](https://auth0.com/docs/api/authentication#multi-factor-authentication)
 - [ ] Implement auth0 actions
 - [X] UML Diagram
