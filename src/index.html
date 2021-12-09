@@ -16,11 +16,17 @@
     <link rel="stylesheet" type="text/css" href="/main.css" />
     <script src="/main.js"></script>
     <script src="/node_modules/qrcode/build/qrcode.min.js"></script>
-    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js"></script>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.19.3/auth0-spa-js.production.js"></script>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 
 </head>
 
@@ -64,13 +70,14 @@
             </nav>
         </div>
         <div class="container hidden" id="gated-content">
-            <hr/>
+            <hr />
             <p>
                 You're seeing this content because you're currently
                 <strong>logged in</strong>.
             </p>
-            <hr/>
-            <button type="button" class="btn btn-primary btn-margin" data-toggle="modal" data-target="#associate-sms-form">
+            <hr />
+            <button type="button" class="btn btn-primary btn-margin" data-toggle="modal"
+                data-target="#associate-sms-form">
                 Add Phone Number
             </button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#associate-otp-form">
@@ -79,11 +86,24 @@
             <button type="button" class="btn btn-primary" onclick="execContinue()">
                 Continue Authentication
             </button>
-            <hr/>
-            <button type="button" class="btn btn-primary btn-margin" data-toggle="modal" data-target="#associate-sms-form">
+            <hr />
+            <button type="button" class="btn btn-primary btn-margin" data-toggle="modal"
+                data-target="#associate-sms-form">
                 Auto Enroll user from custom claim
             </button>
-            <hr/>
+            <hr />
+            <button type="button" class="btn btn-primary btn-margin" onClick="challengeFactorMFA('email');">
+                Challenge Email MFA
+            </button>
+            <button type="button" class="btn btn-primary btn-margin" onClick="challengeFactorMFA('sms');">
+                Challenge SMS MFA
+            </button>
+            <button type="button" class="btn btn-primary btn-margin" onClick="challengeFactorMFA('totp');">
+                Challenge TOTP MFA
+            </button>
+            <hr />
+            <pre><code id="json-container"></code></pre>
+            <hr />
             <label>
                 <b>Access token:</b>
                 <pre id="access-token"></pre>
@@ -120,11 +140,13 @@
                     </div>
                     <div class="modal-body">
                         <div id="associate-mfa-sms-block" class="input-group input-group-lg">
-                            <input id="associate-mfa-sms-phone" placeholder="mobile number" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm"/>
+                            <input id="associate-mfa-sms-phone" placeholder="mobile number" class="form-control"
+                                aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
                             <button type="button" class="btn btn-primary" onclick="associateMfaSms()">Enroll</button>
                         </div>
                         <div id="verify-mfa-sms-block" style="display: none;" class="input-group input-group-lg">
-                            <input id="verify-mfa-sms-code" placeholder="SMS Code" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm"/>
+                            <input id="verify-mfa-sms-code" placeholder="SMS Code" class="form-control"
+                                aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
                             <button type="button" class="btn btn-primary" onclick="verifyMfaSms()">Verify</button>
                         </div>
                     </div>
@@ -145,27 +167,52 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <button  class="btn btn-primary" onclick="associateMfaOtp()">Add</button><br/>
-                        <div id="verify-mfa-otp-block" style="display: none;" >
+                        <button class="btn btn-primary" onclick="associateMfaOtp()">Add</button><br />
+                        <div id="verify-mfa-otp-block" style="display: none;">
                             <div class="input-group mb-3">
-                                <input disabled="true" id="verify-mfa-otp-secret" size="45" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="test"></input>
+                                <input disabled="true" id="verify-mfa-otp-secret" size="45" class="form-control"
+                                    aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="test"></input>
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard()">Copy</button>
-                                  </div>
+                                    <button class="btn btn-outline-secondary" type="button"
+                                        onclick="copyToClipboard()">Copy</button>
+                                </div>
                             </div>
                             <canvas id="verify-mfa-otp-qr"></canvas>
                             <div class="input-group mb-3">
-                                <input id="verify-mfa-otp-code" type="number" placeholder="6-digit code" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" /> 
+                                <input id="verify-mfa-otp-code" type="number" placeholder="6-digit code"
+                                    class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary"
-                                onclick="verifyMfaOtp()">Verify</button>
+                                    <button class="btn btn-outline-secondary" onclick="verifyMfaOtp()">Verify</button>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Skip</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Challenge Verify Modal -->
+        <div class="modal fade" id="verify-otp-form" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Verify Your Identity</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="verify-challenge-block" class="input-group input-group-lg">
+                            <input id="verify-mfa-code" placeholder="Verification Code" class="form-control"
+                                aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
+                            <button type="button" class="btn btn-primary" onclick="verifyChallenge()">Verify</button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
                     </div>
                 </div>
             </div>
