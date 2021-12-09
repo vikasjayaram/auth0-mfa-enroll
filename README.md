@@ -2,6 +2,8 @@
 
 This project shows how an Auth0 user can list, add and delete his/her MFA devices using [MFA API](https://auth0.com/docs/multifactor-authentication/api) (which is just a part of [Authentication API](https://auth0.com/docs/api/authentication#multi-factor-authentication)) directly from a web page without any backend. Currently, it only supports adding SMS and OTP.
 
+Provides a way to challenge for [MFA using AUth0 MFA API](https://auth0.com/docs/api/authentication#multi-factor-authentication)
+
 **Configuration steps:**
 
 1. Enable "SMS" and "One-time Password" factors and enable "Always require Multi-factor Authentication" switch [docs](https://auth0.com/docs/multifactor-authentication#1-enable-the-factors-you-require) 
@@ -16,7 +18,7 @@ This project shows how an Auth0 user can list, add and delete his/her MFA device
 ![Image of MFA Flow](https://github.com/vikasjayaram/auth0-mfa-enroll/blob/master/images/UML%20sequence_%20Auto%20Enroll%20MFA%20factor%20%232.jpeg)
 
 **Screenshot**
-![Image of MFA App](https://github.com/vikasjayaram/auth0-mfa-enroll/blob/master/images/screentshot-1.png)
+![Image of MFA App](https://github.com/vikasjayaram/auth0-mfa-enroll/blob/master/images/screenshot-2.png)
 
 
 **Usage tips:**
@@ -38,5 +40,6 @@ This project shows how an Auth0 user can list, add and delete his/her MFA device
 
 - [ ] Display recovery code on first device enrollment 
 - [X] Auto enroll user using custom claim
+- [X] Challenge For [MFA using AUth0 MFA API](https://auth0.com/docs/api/authentication#multi-factor-authentication)
 - [ ] Implement auth0 actions
 - [X] UML Diagram
